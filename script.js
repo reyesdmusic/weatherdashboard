@@ -1,7 +1,7 @@
 
 $(document).ready(function(data) {
 
-    $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=Miami,Florida&appid=ff3af498ead27371a1dcb730a1c7e5a7&units=imperial", function(data) {
+    $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=Miami,Florida&appid=ff3af498ead27371a1dcb730a1c7e5a7&units=imperial", function(data) {
     console.log(data);
     
     var icon = data.weather[0].icon;
@@ -40,7 +40,7 @@ $(document).ready(function(data) {
 
     console.log(name);
 
-    latLonApi = "http://api.openweathermap.org/data/2.5/uvi/forecast?appid=ff3af498ead27371a1dcb730a1c7e5a7&lat=" + lat + "&lon=" + lon;
+    latLonApi = "https://api.openweathermap.org/data/2.5/uvi/forecast?appid=ff3af498ead27371a1dcb730a1c7e5a7&lat=" + lat + "&lon=" + lon;
 
     $.getJSON(latLonApi, function(data) {
     
