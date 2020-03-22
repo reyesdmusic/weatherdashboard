@@ -8,20 +8,18 @@ body {
 
 .my-nav-bar {
     text-align: center;
-    padding: 2px;
-    border-radius: 100%;
+    padding: 30px;
+    border-radius: 40%;
     background-color: white;
     color: black;
     margin-top: none;
+    
 }
 
 #user-search {
     width: 80%;
 }
 
-#search-button {
-
-}
 
 #temperature-li, #wind-li, #humidity-li, #uvi-li {
     padding: 10px;
@@ -30,7 +28,7 @@ body {
 
 .mild {
     display: inline-block;
-    background-color: red;
+    background-color: rgb(13, 165, 13);
     color: white;
     border-radius: 8px;
 }
@@ -68,19 +66,17 @@ body {
 }
 
 #header-text {
-    margin-top: -5px;
+    margin-top: 10px;
 }
 
-.container {
-    width: 100%;
-    margin-bottom: 80px;
-}
+
 
 
 #current-info-panel {
     border-radius: 10px;
     background-color: white;
     padding: 20px;
+
 }
 
 #forecast-info-panel {
@@ -138,3 +134,25 @@ input {
     border-bottom: 1px solid rgb(73, 182, 255) !important;
   }
 
+ .container {
+     width: 100%;
+     margin-bottom: 80px;
+ }
+
+ @media only screen and (max-width: 178px) {
+    #search-div {
+      margin-bottom: 15px;
+    }
+  }
+
+  #search-header {
+      padding: 10px;
+      margin-bottom: 20px;
+  }
+
+  .city-li {
+      border: solid 1px gray;
+      padding: 8px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+  }
