@@ -15,6 +15,14 @@ body {
     margin-top: none;
 }
 
+#user-search {
+    width: 80%;
+}
+
+#search-button {
+
+}
+
 #temperature-li, #wind-li, #humidity-li, #uvi-li {
     padding: 10px;
     margin: 8px;
@@ -108,5 +116,25 @@ body {
 
   #forecast-panel {
       padding-bottom: 20px;
+  }
+
+button {
+
+    border-radius: 8px;
+    border: none;
+    line-height: 4px;
+    padding: 5px;
+}
+
+button:focus {
+    background-color: rgb(98, 148, 241) !important;
+}
+
+input {
+    border-bottom: 1px solid rgb(109, 109, 109) !important;
+  }
+
+  input:focus {
+    border-bottom: 1px solid rgb(73, 182, 255) !important;
   }
 

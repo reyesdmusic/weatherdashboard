@@ -2,6 +2,8 @@
 $(document).ready(function(data) {
 
     $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=Miami,Florida&appid=ff3af498ead27371a1dcb730a1c7e5a7&units=imperial", function(data) {
+    
+    
     console.log(data);
     
     var icon = data.weather[0].icon;
@@ -74,18 +76,21 @@ $(document).ready(function(data) {
     
 });
 
-$("#user-input").submit(function (event){
-    event.preventDefault();
-
-    console.log("submitted");
-
-});
 
 
-
+    $("#search-button").on("click", function(event){
+        event.preventDefault();
+        var userCity = $("#user-search").val().trim();
+        if (userCity == null) {
+            return;
+        }
+        else {
+        console.log(userCity);
+        }
+    })
 
 
    
   
-  });
+});
   

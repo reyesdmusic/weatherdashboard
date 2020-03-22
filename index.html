@@ -1,23 +1,18 @@
 <!DOCTYPE html>
   <html>
     <head>
-      <!--Import Google Icon Font-->
+  
+        
       <link href="css/weather-icon-animated.css" rel="stylesheet">
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--Import materialize.css-->
-      
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">  
       <link href="https://fonts.googleapis.com/css?family=Spartan&display=swap" rel="stylesheet"> 
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
-     
       <link rel="stylesheet" href="assets/style.css">
-      
-      
-  
-      <!--Let browser know website is optimized for mobile-->
+    
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
       <title>Weather Dashboard</title>
 
-      
     </head>
 
     <body>
@@ -40,18 +35,18 @@
                 <div class="col l3 m12 s12">
                     <div id="search-div">
                         <h4>Search for a city</h4>
-                        <form id="user-input">
-                            <div class="input-field">
-                            <input id="search" type="search" required>
-                            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                            <i class="material-icons">close</i>
-                            </div>
+         
+                        <div id="user-input">
+                            
+                        <input id="user-search" type="text" placeholder="City" required>
+                            <button  style="background-color: rgb(19, 103, 199); width: 40px; color: white;" id="search-button"><i class="material-icons">search</i></button>
+                          
                             <ul class="collection with-header">
                                 <li class="collection-item"></li>
                                 <li class="collection-item"></li>
                                 <li class="collection-item"></li>
                             </ul>
-                        </form>
+                        </div>
                     </div>
                 </div>
 
@@ -176,26 +171,19 @@
 
                     
                     </div>
-
-                    </div>
                         
              
                 </div>
-                
-             
-              
+            
 
             </div>
-
-      
       
         </div>
-
-
-      <!--Import jQuery before materialize.js-->
       
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-       <script src="script.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+        <script src="script.js"></script>
+    
     </body>
-  </html>
+  
+</html>
