@@ -177,10 +177,16 @@ function renderSearchHistory() {
 }
 
 function renderLastSearched() {
+   
     var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
+
+    if (allUserCities === null) {
+        renderMain();
+    }
+    else {
     userCity = allUserCities[0];
     renderMain();
-    
+    }
 }
 
 function renderForecast() {
