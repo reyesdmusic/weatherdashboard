@@ -1,62 +1,144 @@
 
 $(document).ready(function(data) {
 
-   
-    
+    // userCity will be equal to the city the user searches for, which is then put into the API
+
     var userCity;
+
+    // storedUserHistory will contain the user's previous search history as well as new new searches. 
+
     var storedUserHistory = [];
 
+     // forecastDays contains numbers used in the Forecast API call. Each number other than zero represents the arrays containing weather info at noon for each the next five days
+
+    var forecastDays = [0, 3, 11, 19, 27, 35];
+
+    // thisIcon will be equal to the icon code pulled from the API.
+
+    var thisIcon;
+
+    // the following is each animated icon, for the forecast and then larger ones for the main info div.
+
+    var sunny = '<div class="icon sunny" style="font-size: 7px">' +
+    '<div class="sun">' +
+    '<div class="rays"></div>' +
+    '</div>' +
+    '</div>';
+    var cloudy = '<div class="icon cloudy" style="font-size: 7px">' +
+    '<div class="cloud"></div>' +
+    '<div class="cloud"></div>' +
+    '</div>';
+    var showers = '<div class="icon rainy" style="font-size: 7px">' +
+    '<div class="cloud"></div>' +
+    '<div class="rain"></div>' +
+    '</div>';
+    var sunShowers = '<div class="icon sun-shower" style="font-size: 7px">' +
+    '<div class="cloud"></div>' +
+    '<div class="sun">' +
+    '<div class="rays"></div>' +
+    '</div>' +
+    '<div class="rain"></div>' +
+    '</div>';
+    var thunderstorm = '<div class="icon thunder-storm" style="font-size: 7px">' +
+    '<div class="cloud"></div>' +
+    '<div class="lightning">' +
+    '<div class="bolt"></div>' +
+    '<div class="bolt"></div>' +
+    '</div>' +
+    '</div>';
+    var snowy = '<div class="icon flurries" style="font-size: 7px">' +
+    '<div class="cloud"></div>' +
+    '<div class="snow">' +
+    '<div class="flake"></div>' +
+    '<div class="flake"></div>' +
+    '</div>' +
+    '</div>';
+
+    // large icons
     
+    var sunny1 = '<div class="icon sunny" style="font-size: 15px">' +
+    '<div class="sun">' +
+    '<div class="rays"></div>' +
+    '</div>' +
+    '</div>';
+    var cloudy1 = '<div class="icon cloudy" style="font-size: 15px">' +
+    '<div class="cloud"></div>' +
+    '<div class="cloud"></div>' +
+    '</div>';
+    var showers1 = '<div class="icon rainy" style="font-size: 15px">' +
+    '<div class="cloud"></div>' +
+    '<div class="rain"></div>' +
+    '</div>';
+    var sunShowers1 = '<div class="icon sun-shower" style="font-size: 15px">' +
+    '<div class="cloud"></div>' +
+    '<div class="sun">' +
+    '<div class="rays"></div>' +
+    '</div>' +
+    '<div class="rain"></div>' +
+    '</div>';
+    var thunderstorm1 = '<div class="icon thunder-storm" style="font-size: 15px">' +
+    '<div class="cloud"></div>' +
+    '<div class="lightning">' +
+    '<div class="bolt"></div>' +
+    '<div class="bolt"></div>' +
+    '</div>' +
+    '</div>';
+    var snowy1 = '<div class="icon flurries" style="font-size: 15px">' +
+    '<div class="cloud"></div>' +
+    '<div class="snow">' +
+    '<div class="flake"></div>' +
+    '<div class="flake"></div>' +
+    '</div>' +
+    '</div>';
+
+
     pullUpSearchHistory();
     renderSearchHistory();
     renderDate();
     renderLastSearched();
-    hideIcons();
-   
     
+    //Render weather info and forecast from API search. And render user's previously searched history along with the new search entry.
 
     function renderMain() {
 
-    $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&appid=ff3af498ead27371a1dcb730a1c7e5a7&units=imperial", function(data) {
- 
-    var icon = data.weather[0].icon;
+        $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&appid=ff3af498ead27371a1dcb730a1c7e5a7&units=imperial", function(data) {
+        
+        var icon = data.weather[0].icon;
+        
+        var temp = data.main.temp;
+        $("#temperature-li").html("Temp: " + temp + " F");
+        
+        var wind = data.wind.speed;
+        $("#wind-li").html("Wind: " + wind + " mph");
 
-    var temp = data.main.temp;
+        var humidity = data.main.humidity;
+        $("#humidity-li").html("Humidity: " + humidity + "%");
 
-    $("#temperature-li").html("Temp: " + temp + " F");
+        var lon = data.coord.lon;
+        var lat = data.coord.lat;
+        
+        var name = data.name;
+        $("#city-name").html(name);
 
-    var wind = data.wind.speed;
+        storeUserInfo(name);
+        
+        latLonApi = "https://api.openweathermap.org/data/2.5/uvi/forecast?appid=ff3af498ead27371a1dcb730a1c7e5a7&lat=" + lat + "&lon=" + lon;
 
-    $("#wind-li").html("Wind: " + wind + " mph");
+        whichMainIcons(icon);
+        $("#main-icon").html("");
+        $("#main-icon").append(thisIcon);
 
-    var humidity = data.main.humidity;
+        getLatLon();
+        renderForecast();
+        
+        });
 
-    $("#humidity-li").html("Humidity: " + humidity + "%");
+    }
 
-    var lon = data.coord.lon;
+    // The UVI index information can only be pulled from an API search using lat and lon. So this pulls the info from that API call (in renderMain function) then determines severity level and creates an li with appropriate info and class.
 
-    var lat = data.coord.lat;
-
-    var name = data.name;
-
-    $("#city-name").html(name);
-
-    storeUserInfo(name);
-    
-
-    latLonApi = "https://api.openweathermap.org/data/2.5/uvi/forecast?appid=ff3af498ead27371a1dcb730a1c7e5a7&lat=" + lat + "&lon=" + lon;
-
-  getLatLon();
-  renderForecast();
- 
-
-    
-});
-
-}
-
-function getLatLon() {
-    $.getJSON(latLonApi, function(data) {
+    function getLatLon() {
+        $.getJSON(latLonApi, function(data) {
     
         var uvi = data[0].value;
     
@@ -76,12 +158,195 @@ function getLatLon() {
     
         if (uvi > 7) {
             $("#uvi-li").attr("class", "extreme");
+        }   
+        });
+    }
+
+    // Render the current date, pulling info from moment.js.
+
+    function renderDate() {
+        let m = moment().format("HH");
+        let day = moment().format("dddd");
+        let date = moment().format("LL");
+        $("#date").html(day + ", " + date);
+    }
+  
+    // As long as storedUserHistory is not null, search to see if x, the newly searched city, is already in there. If so, remove it. Either way, add the newly searched entry to the front of the array. Then clear localStorage and save the new storedUserHistory array which inclueds the previously searched entries and this new one.
+
+    function storeUserInfo(x) {
+        if (storedUserHistory !== null) {
+        for (i=0; i < storedUserHistory.length; i++) {
+        if (storedUserHistory[i] == x) {
+            storedUserHistory.splice(i, 1);
+        
+        }}
+        storedUserHistory.unshift(x);
+        localStorage.clear();
+        localStorage.setItem('userCityHistory', JSON.stringify(storedUserHistory));
+        renderSearchHistory();
+    }}
+
+    // If nothing in localStorage, stop function. If there are more than ten entries in there only pull up the most recent 10. If there are less than ten, pull up all of them.
+
+    function pullUpSearchHistory() {
+        var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
+        if (allUserCities === null) {
+            return;
         }
+
+        else if (allUserCities.length >= 10) {
+            for (i=0; i < 10; i++) {
+            storedUserHistory.push(allUserCities[i]);          
+            }}
+
+        else {
+            for (i=0; i < allUserCities.length; i++) {
+            storedUserHistory.push(allUserCities[i]);          
+            }  
+    }}
+
+    // Render user's search history
+
+    function renderSearchHistory() {
+        var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
+
+        $("#user-history-list").html("");
+
+        if (allUserCities === null) {
+            return;
+        }
+
+        else if (allUserCities.length >= 10) {
+            for (i=0; i < 10; i++) {
+                $("#user-history-list").append("<li><button class=city-li>" + allUserCities[i] + "</button></li>");
+        }}
+
+        else {
+            for (i=0; i < allUserCities.length; i++) {
+                $("#user-history-list").append("<li><button class=city-li>" + allUserCities[i] + "</button></li>");        
+            }
+
+    }}
+
+    // Render the info and forecast for city last searched for by the user.
+
+    function renderLastSearched() {
     
-    
+        var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
+
+        if (allUserCities === null) {
+        renderNoHistory();
+        }
+
+        else {
+        userCity = allUserCities[0];
+        renderMain();
+        }
+    }
+
+    // Create 5 li's with the appropriate classes and forecast info from the API.
+
+    function renderForecast() {
+
+        $("#forecast-info-panel").html("");
+
+        $.getJSON("https://api.openweathermap.org/data/2.5/forecast?q=" + userCity + "&appid=ff3af498ead27371a1dcb730a1c7e5a7&units=imperial", function(data) {
+                
+
+        for (i=1; i <= 5; i++) {
+            var x = forecastDays[i];
+
+            var day1temp = data.list[x].main.temp;
+            var day1humidity = data.list[x].main.humidity;
+            var day1icon = data.list[x].weather[0].icon;
+            let dayPlus1  = moment().add(i,'days').format("l");
+
+            whichIcons(day1icon);
+            console.log(day1icon);
+
+            $("#forecast-info-panel").append('<div class="left left-align col l2 m12 s12" id="day-1-card">' + thisIcon + dayPlus1 + '<li> Temp: ' + day1temp + ' F </li> <li> Humidity: ' + day1humidity + '% </li>' + '</div>');
+        }
         
     });
-}
+
+    }
+
+    // Determine which icons to render based on icon code from API.
+
+    function whichIcons(x) {
+        if (x === "01d" || x === "01n") {
+            thisIcon = sunny;
+        }
+        else if (x === "03d" || x === "03n" || x === "04d" || x === "04n" || x === "50d" || x === "50n" || x === "02d" || x === "02n") {
+            thisIcon = cloudy;
+        }
+        else if (x === "09d" || x === "09n") {
+        thisIcon = showers;
+        }
+
+        else if (x === "10d" || x === "10n") {
+            thisIcon = sunShowers;
+        }
+        else if (x === "11d" || x === "11n") {
+            thisIcon = thunderstorm;
+        }
+        else  {
+            thisIcon = snowy;
+        }
+    }
+
+    // Determine which icons to render for the Main Info div.
+
+    function whichMainIcons(x) {
+        if (x === "01d" || x === "01n") {
+            thisIcon = sunny1;
+        }
+        else if (x === "03d" || x === "03n" || x === "04d" || x === "04n" || x === "50d" || x === "50n" || x === "02d" || x === "02n") {
+            thisIcon = cloudy1;
+        }
+        else if (x === "09d" || x === "09n") {
+        thisIcon = showers1;
+        }
+
+        else if (x === "10d" || x === "10n") {
+            thisIcon = sunShowers1;
+        }
+        else if (x === "11d" || x === "11n") {
+            thisIcon = thunderstorm1;
+        }
+        else  {
+            thisIcon = snowy1;
+        }
+    }
+
+    // If there is no previously searched history, render this basic format.
+
+    function renderNoHistory() {
+        $("#temperature-li").html("Temp: " );
+
+        $("#wind-li").html("Wind: " );
+
+        $("#humidity-li").html("Humidity: " );
+
+        $("#city-name").html("City");
+
+        $("#main-icon").html(sunny1);
+
+        $("#uvi-li").attr("class", "mild").html("UV Index: ");
+
+        $("#forecast-info-panel").html("");
+
+        for (i=1; i <= 5; i++) {
+            var x = forecastDays[i];
+
+            let dayPlus1  = moment().add(i,'days').format("l");
+
+            $("#forecast-info-panel").append('<div class="left left-align col l2 m12 s12" id="day-1-card">' + thunderstorm + dayPlus1 + '<li> Temp: ' + '</li> <li> Humidity: ' + ' </li>' + '</div>');    
+        }
+
+    }
+
+    // Upon clicking search, if something was typed in the input, render the information and clear the search input.
 
     $("#search-button").on("click", function(event){
         event.preventDefault();
@@ -91,15 +356,14 @@ function getLatLon() {
         }
         else {
         console.log(userCity);
-        
-        
+               
         renderMain();
         $("#user-search").val("");
 
         }
     })
 
-  
+    // Upon clicking a previously searched city in the search history div, remove the city from the storedUserHistory div and place it at the top, clear local storage and save the search history with the new order, then render the info for that city.
 
     $(document).on('click', '.city-li' , function(event){
         event.preventDefault();
@@ -115,164 +379,14 @@ function getLatLon() {
         renderMain();
     })
 
-    function renderDate() {
-    let m = moment().format("HH");
-    let day = moment().format("dddd");
-    let date = moment().format("LL");
-    $("#date").html(day + ", " + date);
-    }
+    // Clear storedUserHistory, localStorage, and search history div.
 
-    function storeUserInfo(x) {
-        if (storedUserHistory !== null) {
-        for (i=0; i < storedUserHistory.length; i++) {
-        if (storedUserHistory[i] == x) {
-            storedUserHistory.splice(i, 1);
-        
-        }}
-        storedUserHistory.unshift(x);
+    $("#clear-history").on("click", function() {
         localStorage.clear();
-        localStorage.setItem('userCityHistory', JSON.stringify(storedUserHistory));
-        renderSearchHistory();
-     }}
+        $("#user-history-list").html("");
+        storedUserHistory = [];
+    })
 
- 
-function pullUpSearchHistory() {
-    var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
-    if (allUserCities === null) {
-        return;
-}
-    else if (allUserCities.length >= 10) {
-         for (i=0; i < 10; i++) {
-        storedUserHistory.push(allUserCities[i]);          
-        }}
-
-    else {
-        for (i=0; i < allUserCities.length; i++) {
-        storedUserHistory.push(allUserCities[i]);          
-        }
-
-    }
-}
-
-function renderSearchHistory() {
-    var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
-
-    $("#user-history-list").html("");
-
-    if (allUserCities === null) {
-        return;
-}
-    else if (allUserCities.length >= 10) {
-         for (i=0; i < 10; i++) {
-     $("#user-history-list").append("<li class=city-li><button>" + allUserCities[i] + "</button></li>");
-        }}
-
-    else {
-        for (i=0; i < allUserCities.length; i++) {
-            $("#user-history-list").append("<li class=city-li><button>" + allUserCities[i] + "</button></li>");        
-        }
-
-    }
-
-}
-
-function renderLastSearched() {
-   
-    var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
-
-    if (allUserCities === null) {
-        renderMain();
-    }
-    else {
-    userCity = allUserCities[0];
-    renderMain();
-    }
-}
-
-function renderForecast() {
-
-
-    $.getJSON("https://api.openweathermap.org/data/2.5/forecast?q=" + userCity + "&appid=ff3af498ead27371a1dcb730a1c7e5a7&units=imperial", function(data) {
-
-
-    var day1temp = data.list[3].main.temp;
-    var day1humidity = data.list[3].main.humidity;
-    var day1icon = data.list[3].weather[0].icon;
-    let dayplus1  = moment().add(1,'days').format("l");
-    $("#day1info").html("");
-    $("#day1info").append(dayplus1);
-    $("#day1info").append("<li> Temp: " + day1temp + " F </li>");
-    $("#day1info").append("<li> Humidity: " + day1humidity + "% </li>");
-    console.log(day1icon);
-
-
-
-
-    var day2temp = data.list[11].main.temp;
-    var day2humidity = data.list[11].main.humidity;
-    var day2icon = data.list[11].weather[0].icon;
-    let dayplus2  = moment().add(2,'days').format("l");
-    $("#day2info").html("");
-    $("#day2info").append(dayplus2);
-    $("#day2info").append("<li> Temp: " + day2temp + " F </li>");
-    $("#day2info").append("<li> Humidity: " + day2humidity + "% </li>");
-
-    var day3temp = data.list[19].main.temp;
-    var day3humidity = data.list[19].main.humidity;
-    var day3icon = data.list[19].weather[0].icon;
-    let dayplus3  = moment().add(3,'days').format("l");
-    $("#day3info").html("");
-    $("#day3info").append(dayplus3);
-    $("#day3info").append("<li> Temp: " + day3temp + " F </li>");
-    $("#day3info").append("<li> Humidity: " + day3humidity + "% </li>");
-
-    var day4temp = data.list[27].main.temp;
-    var day4humidity = data.list[27].main.humidity;
-    var day4icon = data.list[27].weather[0].icon;
-    let dayplus4  = moment().add(4,'days').format("l");
-    $("#day4info").html("");
-    $("#day4info").append(dayplus4);
-    $("#day4info").append("<li> Temp: " + day4temp + " F </li>");
-    $("#day4info").append("<li> Humidity: " + day4humidity + "% </li>");
-
-    var day5temp = data.list[35].main.temp;
-    var day5humidity = data.list[35].main.humidity;
-    var day5icon = data.list[35].weather[0].icon;
-    let dayplus5  = moment().add(5,'days').format("l");
-    $("#day5info").html("");
-    $("#day5info").append(dayplus5);
-    $("#day5info").append("<li> Temp: " + day5temp + " F </li>");
-    $("#day5info").append("<li> Humidity: " + day5humidity + "% </li>");
-    
-});
-
-}
-
-function hideIcons() {
-    $("#sun1").hide();
-    $("#cloud1").hide();
-    $("#bolt1").hide();
-    $("#snow1").hide();
-    $("#rain1").hide();
-}
-
-function showIcons(x) {
-    if (x === "01d" || x === "01n" || x === "02d" || x === "02n") {
-        hideIcons(); $("#sun1").show();
-    }
-    else if (x === "03d" || x === "03n" || day1icon === "04d" || day1icon === "04n" || day1icon === "50d" || day1con === "50n") {
-        hideIcons(); $("#cloud1").show();
-    }
-    else if (day1icon === "09d" || day1icon === "09n" || day1icon === "10d" || day1icon === "10n") {
-        hideIcons(); $("#rain1").show();
-    }
-    else if (day1icon === "11d" || day1icon === "11n") {
-        hideIcons(); $("#bolt1").show();
-    }
-    else  {
-        hideIcons(); $("#cloud1").show();
-    }
-}
   
 });
 

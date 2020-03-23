@@ -62,7 +62,7 @@ body {
 
 
 #city-name {
-    margin-top: -8px;
+    margin-top: 4px;
 }
 
 #header-text {
@@ -95,6 +95,7 @@ body {
     margin: 12px;
     font-size: 12px;
     line-height: 30px;
+    list-style: none;
 
 }
 
@@ -116,7 +117,7 @@ body {
       padding-bottom: 20px;
   }
 
-button {
+#search-button {
 
     border-radius: 8px;
     border: none;
@@ -158,4 +159,14 @@ input {
       padding: 8px;
       border-radius: 8px;
       margin-bottom: 10px;
+      width: 100%;
   }
+
+  #clear-history {
+      background-color: rgb(228, 190, 24);
+      border-radius: 8px;
+      padding: 10px;
+      border: none;
+  }
+
+  
