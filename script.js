@@ -1,13 +1,16 @@
 
 $(document).ready(function(data) {
 
+   
+    
     var userCity;
     var storedUserHistory = [];
-
-    renderMain();
+    
+    pullUpSearchHistory();
+    renderSearchHistory();
     renderDate();
-    storeOldUserCity();
-  
+    renderLastSearched();
+
 
     function renderMain() {
 
@@ -53,6 +56,7 @@ $(document).ready(function(data) {
     console.log(name);
 
     storeUserInfo(name);
+    
 
     latLonApi = "https://api.openweathermap.org/data/2.5/uvi/forecast?appid=ff3af498ead27371a1dcb730a1c7e5a7&lat=" + lat + "&lon=" + lon;
 
@@ -104,10 +108,28 @@ function getLatLon() {
         }
         else {
         console.log(userCity);
-        }
-
+        
+        
         renderMain();
         $("#user-search").val("");
+
+        }
+    })
+
+  
+
+    $(document).on('click', '.city-li' , function(event){
+        event.preventDefault();
+        userCity = this.innerText;
+        for (i=0; i < storedUserHistory.length; i++) {
+            if (storedUserHistory[i] == userCity) {
+                storedUserHistory.splice(i, 1);
+            }}
+        storedUserHistory.unshift(userCity);
+        localStorage.clear();
+        localStorage.setItem('userCityHistory', JSON.stringify(storedUserHistory));
+        renderSearchHistory();
+        renderMain();
     })
 
     function renderDate() {
@@ -118,33 +140,68 @@ function getLatLon() {
     }
 
     function storeUserInfo(x) {
+        if (storedUserHistory !== null) {
+        for (i=0; i < storedUserHistory.length; i++) {
+        if (storedUserHistory[i] == x) {
+            storedUserHistory.splice(i, 1);
+        
+        }}
         storedUserHistory.unshift(x);
+        localStorage.clear();
         localStorage.setItem('userCityHistory', JSON.stringify(storedUserHistory));
-        storeOldUserCity();
-     }
+        renderSearchHistory();
+     }}
 
  
+function pullUpSearchHistory() {
+    var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
+    if (allUserCities === null) {
+        return;
+}
+    else if (allUserCities.length >= 10) {
+         for (i=0; i < 10; i++) {
+        storedUserHistory.push(allUserCities[i]);          
+        }}
 
-function storeOldUserCity() {
-    var oldUserCity = JSON.parse(localStorage.getItem("userCityHistory"));
+    else {
+        for (i=0; i < allUserCities.length; i++) {
+        storedUserHistory.push(allUserCities[i]);          
+        }
+
+    }
+}
+
+function renderSearchHistory() {
+    var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
+
     $("#user-history-list").html("");
 
-    if (oldUserCity.length >= 10) {
-        for (i=0; i < 10; i++) {
-            storedUserHistory.push(oldUserCity[i]);
-            $("#user-history-list").append("<li class=city-li><button>" + storedUserHistory[i] + "</button></li>");
-    
-        }}
-    else {
-    for (i=0; i < oldUserCity.length; i++) {
-    storedUserHistory.push(oldUserCity[i]);
-    $("#user-history-list").append("<li class=city-li><button>" + storedUserHistory[i] + "</button></li>");
+    if (allUserCities === null) {
+        return;
 }
-console.log(storedUserHistory);
+    else if (allUserCities.length >= 10) {
+         for (i=0; i < 10; i++) {
+     $("#user-history-list").append("<li class=city-li><button>" + allUserCities[i] + "</button></li>");
+        }}
 
+    else {
+        for (i=0; i < allUserCities.length; i++) {
+            $("#user-history-list").append("<li class=city-li><button>" + allUserCities[i] + "</button></li>");        
+        }
+
+    }
+
+}
+
+function renderLastSearched() {
+    var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
+    userCity = allUserCities[0];
+    renderMain();
     
+}
 
-}}
+
   
 });
+
   
