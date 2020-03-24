@@ -270,8 +270,7 @@ $(document).ready(function(data) {
             let dayPlus1  = moment().add(i,'days').format("l");
 
             whichIcons(day1icon);
-            console.log(day1icon);
-
+    
             $("#forecast-info-panel").append('<div class="left left-align col l2 m12 s12" id="day-1-card">' + thisIcon + dayPlus1 + '<li> Temp: ' + day1temp + ' F </li> <li> Humidity: ' + day1humidity + '% </li>' + '</div>');
         }
         
@@ -363,8 +362,7 @@ $(document).ready(function(data) {
             return;
         }
         else {
-        console.log(userCity);
-               
+
         renderMain();
         $("#user-search").val("");
 
