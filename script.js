@@ -1,15 +1,15 @@
 
 $(document).ready(function(data) {
 
-    // userCity will be equal to the city the user searches for, which is then put into the API
+    // userCity will be equal to the city the user searches for, which is then put into the API.
 
     var userCity;
 
-    // storedUserHistory will contain the user's previous search history as well as new new searches. 
+    // storedUserHistory will contain the user's previous search history as well as new searches. 
 
     var storedUserHistory = [];
 
-     // forecastDays contains numbers used in the Forecast API call. Each number other than zero represents the arrays containing weather info at noon for each the next five days
+     // forecastDays contains numbers used in the Forecast API call. Each number other than zero represents the arrays containing weather info at noon for each of the next five days
 
     var forecastDays = [0, 3, 11, 19, 27, 35];
 
@@ -17,42 +17,42 @@ $(document).ready(function(data) {
 
     var thisIcon;
 
-    // the following is each animated icon, for the forecast and then larger ones for the main info div.
+    // the following is each animated icon, for smaller ones for the forecast and then larger ones for the main info div.
 
     var sunny = '<div class="icon sunny" style="font-size: 7px">' +
-    '<div class="sun">' +
-    '<div class="rays"></div>' +
-    '</div>' +
-    '</div>';
+                '<div class="sun">' +
+                '<div class="rays"></div>' +
+                '</div>' +
+                '</div>';
     var cloudy = '<div class="icon cloudy" style="font-size: 7px">' +
-    '<div class="cloud"></div>' +
-    '<div class="cloud"></div>' +
-    '</div>';
+                '<div class="cloud"></div>' +
+                '<div class="cloud"></div>' +
+                '</div>';
     var showers = '<div class="icon rainy" style="font-size: 7px">' +
-    '<div class="cloud"></div>' +
-    '<div class="rain"></div>' +
-    '</div>';
+                '<div class="cloud"></div>' +
+                '<div class="rain"></div>' +
+                '</div>';
     var sunShowers = '<div class="icon sun-shower" style="font-size: 7px">' +
-    '<div class="cloud"></div>' +
-    '<div class="sun">' +
-    '<div class="rays"></div>' +
-    '</div>' +
-    '<div class="rain"></div>' +
-    '</div>';
+                '<div class="cloud"></div>' +
+                '<div class="sun">' +
+                '<div class="rays"></div>' +
+                '</div>' +
+                '<div class="rain"></div>' +
+                '</div>';
     var thunderstorm = '<div class="icon thunder-storm" style="font-size: 7px">' +
-    '<div class="cloud"></div>' +
-    '<div class="lightning">' +
-    '<div class="bolt"></div>' +
-    '<div class="bolt"></div>' +
-    '</div>' +
-    '</div>';
+                '<div class="cloud"></div>' +
+                '<div class="lightning">' +
+                '<div class="bolt"></div>' +
+                '<div class="bolt"></div>' +
+                '</div>' +
+                '</div>';
     var snowy = '<div class="icon flurries" style="font-size: 7px">' +
-    '<div class="cloud"></div>' +
-    '<div class="snow">' +
-    '<div class="flake"></div>' +
-    '<div class="flake"></div>' +
-    '</div>' +
-    '</div>';
+                '<div class="cloud"></div>' +
+                '<div class="snow">' +
+                '<div class="flake"></div>' +
+                '<div class="flake"></div>' +
+                '</div>' +
+                '</div>';
 
     // large icons
     
@@ -96,8 +96,10 @@ $(document).ready(function(data) {
     renderSearchHistory();
     renderDate();
     renderLastSearched();
+
+    $("#clear-history").hide();
     
-    //Render weather info and forecast from API search. And render user's previously searched history along with the new search entry.
+    //Render weather info and forecast from API search as well user's previously searched history along with the new search entry.
 
     function renderMain() {
 
@@ -156,9 +158,13 @@ $(document).ready(function(data) {
             $("#uvi-li").attr("class", "high");
         }
     
-        if (uvi > 7) {
-            $("#uvi-li").attr("class", "extreme");
-        }   
+        if (uvi <= 10 && uvi > 7) {
+            $("#uvi-li").attr("class", "very-high");
+        } 
+        
+        if (uvi > 10) {
+            $("#uvi-li").attr("class", "extreme"); 
+        }
         });
     }
 
@@ -205,7 +211,7 @@ $(document).ready(function(data) {
             }  
     }}
 
-    // Render user's search history
+    // Render user's search history and show clear button.
 
     function renderSearchHistory() {
         var allUserCities = JSON.parse(localStorage.getItem("userCityHistory"));
@@ -219,11 +225,13 @@ $(document).ready(function(data) {
         else if (allUserCities.length >= 10) {
             for (i=0; i < 10; i++) {
                 $("#user-history-list").append("<li><button class=city-li>" + allUserCities[i] + "</button></li>");
+                $("#clear-history").show();
         }}
 
         else {
             for (i=0; i < allUserCities.length; i++) {
-                $("#user-history-list").append("<li><button class=city-li>" + allUserCities[i] + "</button></li>");        
+                $("#user-history-list").append("<li><button class=city-li>" + allUserCities[i] + "</button></li>"); 
+                $("#clear-history").show();       
             }
 
     }}
@@ -244,7 +252,7 @@ $(document).ready(function(data) {
         }
     }
 
-    // Create 5 li's with the appropriate classes and forecast info from the API.
+    // Create 5 divs with the appropriate classes and display in li's the forecast info from the API.
 
     function renderForecast() {
 
@@ -379,12 +387,13 @@ $(document).ready(function(data) {
         renderMain();
     })
 
-    // Clear storedUserHistory, localStorage, and search history div.
+    // Clear storedUserHistory, localStorage, search history div and hide clear button.
 
     $("#clear-history").on("click", function() {
         localStorage.clear();
         $("#user-history-list").html("");
         storedUserHistory = [];
+        $("#clear-history").hide();   
     })
 
   

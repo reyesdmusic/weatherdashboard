@@ -20,9 +20,9 @@ Extreme       | Purple
 
 - User's search history is saved in local storage, so the content persists upon refreshing the page.
 
--The user's search history is rendered in the div below the search bar, up to 10 entries, from most recent to oldest. To avoid redundance, user cities only appear once, moving to the top of the list after each search.
+- The user's search history is rendered in the div below the search bar, up to 10 entries, from most recent to oldest. To avoid redundancy, user cities only appear once, moving to the top of the list after each search.
 
--Each entry in the search history is also a button. Once clicked, the information and forecast for that city is rendered. Also, that entry moves up to the top of the list.
+- Each entry in the search history is also a button. Once clicked, the information and forecast for that city is rendered. Also, that entry moves up to the top of the list.
 
 - "Clear History" button empties local storage and clears the "Search History" div.
 
@@ -31,7 +31,9 @@ Extreme       | Purple
 ![](assets/images/weatherUI1.png)
 ![](assets/images/weatherUI2.png)
 
+## Code Example - Rendering Forecast Divs and Info
 
+![](assets/images/weather_code_snippet.png)
 
 ## Tech Used / Dependencies
 
@@ -41,4 +43,4 @@ Extreme       | Purple
 
 - Animated Icons from [Patharanordev](https://github.com/patharanordev/weather-icon-animated) 
 
-- Animated Icons based on [WidgetWeather] (https://dribbble.com/shots/2097042-Widget-Weather)
+- Animated Icons based on [WidgetWeather](https://dribbble.com/shots/2097042-Widget-Weather)

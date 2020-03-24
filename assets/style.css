@@ -111,11 +111,11 @@ body {
     #search-div {
       margin-bottom: 15px;
     }
-  }
+}
 
-  #forecast-panel {
-      padding-bottom: 20px;
-  }
+#forecast-panel {
+    padding-bottom: 20px;
+}
 
 #search-button {
 
@@ -155,18 +155,24 @@ input {
   }
 
   .city-li {
-      border: solid 1px gray;
+      border: none;
+      background-color: rgb(241, 241, 243);
       padding: 8px;
       border-radius: 8px;
       margin-bottom: 10px;
       width: 100%;
   }
 
+  button:hover {
+      opacity: 70%;
+  }
+
   #clear-history {
-      background-color: rgb(228, 190, 24);
+      background-color: rgb(255, 213, 27);
       border-radius: 8px;
       padding: 10px;
       border: none;
+      font-size: 15px;
   }
 
   
